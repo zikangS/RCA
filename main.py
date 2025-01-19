@@ -27,6 +27,7 @@ COLUMNS_FALCON_DCI = [
 ]
 
 data = pandas.read_csv('falconeye_capture_2162.4.csv', sep='\t', names=COLUMNS_FALCON_DCI)
+#data = pandas.read_csv('try_data.csv', sep=',', names=COLUMNS_FALCON_DCI, skiprows=1, low_memory=False)  #for data with header
 print(data)
 
 timestamps = data['timestamp'].tolist()
