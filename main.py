@@ -2,6 +2,7 @@ import pandas
 import matplotlib.pyplot as plt
 from mplcursors import cursor
 import pltinteractivelegend
+from datetime import datetime
 
 COLUMNS_FALCON_DCI = [
     'timestamp',    # unix timestamp in [s] as float, 1µs resolution
@@ -26,37 +27,38 @@ COLUMNS_FALCON_DCI = [
     'hex'           # raw DCI content as hex string, see sscan_hex()/sprint_hex() in falcon_dci.c 
 ]
 
-data = pandas.read_csv('falconeye_capture_2162.4.csv', sep='\t', names=COLUMNS_FALCON_DCI)
-#data = pandas.read_csv('try_data.csv', sep=',', names=COLUMNS_FALCON_DCI, skiprows=1, low_memory=False)  #for data with header and seperated by comma
-print(data)
+# data = pandas.read_csv('falconeye_capture_2162.4.csv', sep='\t', names=COLUMNS_FALCON_DCI)
+data = pandas.read_csv('falconeye_capture_1870_1850_21_100_4_RNTi7063.csv', sep=',', names=COLUMNS_FALCON_DCI, skiprows=1, low_memory=False)  #for data with header and seperated by comma
+# print(data)
 
 timestamps = data['timestamp'].tolist()
 unique_RNTI = data['rnti'].unique()
 
+print(unique_RNTI.shape)
+
 RNTI_prb = []
 col_filter = ['timestamp', 'rnti', 'nof_prb', 'tbs_sum']
 
-for rnti in unique_RNTI:
-    df = data[data['rnti'] == rnti]
-    df = df[col_filter]
-    for index in list(data.index.values):
-        if index in df.index:
-            continue
-        df.loc[index] = timestamps[index], rnti, 0, 0
-    df = df.sort_index()
-    RNTI_prb.append(df)
+data = data[col_filter]
 
-for df in RNTI_prb:
-    plt.plot(timestamps, df['nof_prb'].tolist(), label=df['rnti'][0])
-plt.legend(bbox_to_anchor=(1.04, 1), loc="upper left", ncol=2)
+prb_usage = data.groupby('rnti')['nof_prb'].sum()
+
+# Show only the top 10 RNTIs by PRB usage
+top_n = 10
+prb_usage_top = prb_usage.sort_values(ascending=False).head(top_n)
+
+data = data.loc[data['rnti'].isin(prb_usage_top.index)]
+data['date'] = [datetime.fromtimestamp(d) for d in data['timestamp']]
+
+print(prb_usage_top.index)
+print(data)
+
+fig, ax = plt.subplots(figsize=(8,6))
+
+data.groupby('rnti').plot(x='date', y='nof_prb', ax=ax, kind='line', style='.-')
+
+plt.legend(prb_usage_top.index, bbox_to_anchor=(1.04, 1), loc="upper left", ncol=2)
 plt.title('prb vs time')
-leg = pltinteractivelegend.InteractiveLegend()
-
-plt.figure()
-for df in RNTI_prb:
-    plt.plot(timestamps, df['tbs_sum'].tolist(), label=df['rnti'][0])
-plt.legend(bbox_to_anchor=(1.04, 1), loc="upper left", ncol=2)
-plt.title('tbs vs time')
 leg = pltinteractivelegend.InteractiveLegend()
 
 cursor()
