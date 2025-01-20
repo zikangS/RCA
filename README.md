@@ -39,6 +39,11 @@ Expected output:
 
 `Found CELL <freq> MHz, EARFCN = <earfcn>, PHYID = <cell id>, <prb> PRB, <ports> ports, PSS power = <power> dBm`
 
+The **band** field is compulsory, but not the **RFCN** ones. If the RFCN is not specified, srsRAN will go over all the RFCN of the band.
+Testing a large range of RFCN takes quite a long time. You can spot a specific cell by looking up the informations of the cell you are connected to with your phone. 
+The RFCN (EARFCN in the case of LTE) identifies the **carrier band** and is often available in the test menu of your phone. To access it, you have to enter a code on the phone keyboard. This code depends on the manufacturer of your phone : you will have to look it up on the internet. Ultimately, you will see a list of all cells detected by your phone and their informations. Your phone is connected to the first one in the list.
+Take note that the RFCN is directly linked with the band. To obtain the band your phone is connected to, you can look up an RFCN calcultor on the internet. 
+
 After obtaining the **Cell ID**, **PRB**, and **Frequency**, enter these parameters into the FALCON GUI and click **Start**. The program will begin processing, displaying graphs of the data.
 
 **Note**: If the signal strength is weak, multiple attempts may be needed to display the data successfully.
