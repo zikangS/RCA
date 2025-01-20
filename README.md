@@ -4,7 +4,7 @@
 
 This project focuses on analyzing operating cellular networks using a Universal Software Radio Peripheral (USRP) without a SIM card. All operations in this project are 100% legal and offer significant educational value in understanding cellular networks.
 
-We will use an open-source software collection for real-time analysis of radio resources in private or commercial LTE networks called **FALCON** (Fast Analysis of LTE Control Channels). It can be installed via this [link](https://github.com/falkenber9/falcon).
+We will use an open-source software collection for real-time analysis of radio resources in private or commercial LTE networks called **FALCON** (Fast Analysis of LTE Control Channels).
 
 ### Project Goals
 - Estimate the number of active devices connected to a targeted base station.
@@ -18,8 +18,12 @@ FALCON decodes the Physical Downlink Control Channel (PDCCH) of a base station, 
 
 - **Physical Resource Block (PRB) Information**: PRB usage data helps us calculate PRB load or resource utilization by analyzing the percentage of allocated PRBs versus total available PRBs, aiding in peak utilization analysis.
 
+## FALCON Installation
+FALCON can be installed via this [link](https://github.com/falkenber9/falcon). <span style="color:red">xxxxxxxxxxx</span>
 
-
+### Problems encountered during installation
+### Compilation
+<span style="color:red">xxxxxxxxxxx</span>
 
 ## Real-Time Monitoring
 ### Using FALCON GUI
@@ -90,12 +94,46 @@ After obtaining the data, install required dependencies:
 
 `pip install -r requirements.txt`
 
-Run the analysis script:
+
+Before running the analysis script, we highly recommend configuring your machine to fully utilize all available CPU resources to reduce processing time. Use the following command to achieve this: <span style="color:red">command</span>
+
+To run the analysis script:
 
 `python3 main.py`
 
-**Note**: The interactive legend feature is currently unavailable for both plots.
+
+In this script, we trace the PRB allocation for each RNTI over time. To improve processing efficiency and produce a cleaner graph, we limit the analysis to the top 10 RNTIs with the highest PRB allocations (since base stations typically have thousands of RNTIs connected).
+
+### Data analysis
+
+### Maximum PRBs
+
+We found that the maximum number of PRBs varies across different operators and base stations. This variation arises because the PRBs in a system depend on the channel bandwidth and the subcarrier spacing used in LTE or 5G NR networks.
+
+The total number of PRBs is determined using the formula:
+
+Number of PRBs = Channel Bandwidth (Hz) / (Subcarrier Spacing (Hz) × 12)
+ 
+- 12 subcarriers constitute one PRB.
+- Subcarrier spacing depends on the network configuration (e.g., LTE: 15 kHz, 5G: 15 kHz, 30 kHz, 60 kHz, etc.).
+
+This formula is referenced from this [tutorial](https://www.techtrained.com/lte_prbs_calculation/)
+
+LTE example:
+|**Channel Bandwidth**   |**Number of PRBs**  |
+|------------------------|--------------------|
+|1.4 MHz                 |6                   |
+|3 MHz                   |25                  |
+|10 MHz                  |50                  |
+|15 MHz                  |75                  |
+|20 MHz                  |100                 |
 
 
+### Constant PRB
+In some cases, certain RNTIs appear to have a constant PRB value. Upon further investigation, we determined this may be due to the plotting method, where two points are connected by a straight line.
+
+Our hypothesis is that at some point, an RNTI is allocated x PRBs, and the user disconnects. Later, another user is assigned the same RNTI and coincidentally allocated the same x PRBs. The graph connects these two points with a straight line, leading to potential confusion in the interpretation.
 
 
+### RNTI distribution
+At the DCI level, it is not possible to identify the exact user associated with an RNTI because we cannot link the International Mobile Equipment Identity (IMEI) to the RNTI. This creates challenges in the analysis, as we cannot confirm whether the same user consistently consumes or is allocated PRBs for a specific RNTI.
