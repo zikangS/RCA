@@ -19,11 +19,13 @@ FALCON decodes the Physical Downlink Control Channel (PDCCH) of a base station, 
 - **Physical Resource Block (PRB) Information**: PRB usage data helps us calculate PRB load or resource utilization by analyzing the percentage of allocated PRBs versus total available PRBs, aiding in peak utilization analysis.
 
 ## FALCON Installation
-FALCON can be installed via this [link](https://github.com/falkenber9/falcon). <span style="color:red">xxxxxxxxxxx</span>
+FALCON can be installed via this [link](https://github.com/falkenber9/falcon?tab=readme-ov-file#installation). You need the USRP support to make your own readings.
 
-### Problems encountered during installation
-### Compilation
-<span style="color:red">xxxxxxxxxxx</span>
+### Potential issues during installation
+
+You might have a build error saying `template with C linkage`. The error is documented in [this issue](https://github.com/falkenber9/falcon/issues/8) on the falcon repository. The patch in the [second comment](https://github.com/falkenber9/falcon/issues/8#issuecomment-1761451546) solved the problem for us. Apply the patch in the source code locally and restart the compilation.
+
+You might also get an error saying `'uint32_t' does not name a type`. Simply add `#include <stdint.h>` in the file that causes the error, and restart the compilation.
 
 ## Real-Time Monitoring
 ### Using FALCON GUI
