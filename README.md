@@ -97,7 +97,7 @@ After obtaining the data, install required dependencies:
 `pip install -r requirements.txt`
 
 
-Before running the analysis script, we highly recommend configuring your machine to fully utilize all available CPU resources to reduce processing time. Use the following command to achieve this: <span style="color:red">command</span>
+Before running the analysis script, we highly recommend configuring your machine to fully utilize all available CPU resources to reduce processing time.
 
 To run the analysis script:
 
