@@ -1,4 +1,5 @@
 # RCA (Réseaux Cellulaires Avancés)
+by Zi Kang Siau, Valentin Jossic, Longrui Mai & Maiwenn Kermorgant
 
 ## Objectives and Context
 
